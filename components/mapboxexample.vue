@@ -9,9 +9,19 @@
             href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css"
             type="text/css">
     </head>
-    <v-map class="w-full h-full" :options="state.map" @loaded="onMapLoaded"></v-map>
+    <v-map class="w-full h-full" :options="state.map" @loaded="onMapLoaded">
 
-    <div id="map"></div>
+    </v-map>
+
+    <div id="map">
+        <select id="droupdownid" class="dropdown">
+            <option id="streets-v11" type="radio" name="rtoggle" value="streets-v11" checked="checked">streets</option>
+            <option id="light-v10" type="radio" name="rtoggle" value="light-v10">light</option>
+            <option id="dark-v10" type="radio" name="rtoggle" value="dark-v10">dark</option>
+            <option id="outdoors-v11" type="radio" name="rtoggle" value="outdoors-v11">outdoors</option>
+            <option id="satellite-v9" type="radio" name="rtoggle" value="satellite-v9">satellite</option>
+        </select>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -37,7 +47,9 @@ const state: any = reactive({
     }
 });
 
+
 async function onMapLoaded(map) {
+
     // Add the control to the map.
     map.addControl(
         new MapboxGeocoder({
@@ -46,7 +58,7 @@ async function onMapLoaded(map) {
         })
     );
 
-    console.log("mathod call");
+
     new mapboxgl.Marker({
         color: "#" + (Math.random().toString(16) + "000000").substring(2, 8),
         draggable: true
@@ -193,6 +205,12 @@ async function onMapLoaded(map) {
 
     map.addControl(new mapboxgl.FullscreenControl());
     map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+    var selectId: any = document.getElementById('droupdownid');
+    selectId.addEventListener('change', event => {
+        console.log(event);
+        map.setStyle('mapbox://styles/mapbox/' + event.target.value);
+    })
 }
 </script>
 <style scoped>
@@ -213,9 +231,13 @@ async function onMapLoaded(map) {
     width: 100%;
 }
 
-.mapboxgl-popup {
-    max-width: 400px;
-    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+
+.dropdown {
+    margin-top: 1%;
+    margin-left: 2%;
+    width: 10%;
+    height: 5%;
+    font-size: large;
 }
 </style> 
 
